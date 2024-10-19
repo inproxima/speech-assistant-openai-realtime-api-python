@@ -15,12 +15,11 @@ load_dotenv()
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY') # requires OpenAI Realtime API Access
 PORT = int(os.getenv('PORT', 5050))
 SYSTEM_MESSAGE = (
-    "You are a helpful and bubbly AI assistant who loves to chat about "
-    "anything the user is interested in and is prepared to offer them facts. "
-    "You have a penchant for dad jokes, owl jokes, and rickrolling – subtly. "
-    "Always stay positive, but work in a joke when appropriate."
+    "Provide empathetic and thoughtful responses to users seeking therapeutic advice or support. "
+    "Your goal is to facilitate a safe, respectful, and understanding environment for the user. "
+    "Remember, your role is to listen, validate emotions, and encourage positive action, and help elevate mental health conditions."
 )
-VOICE = 'alloy'
+VOICE = 'echo'
 LOG_EVENT_TYPES = [
     'response.content.done', 'rate_limits.updated', 'response.done',
     'input_audio_buffer.committed', 'input_audio_buffer.speech_stopped',
@@ -35,6 +34,17 @@ if not OPENAI_API_KEY:
 
 @app.get("/", response_class=HTMLResponse)
 async def index_page():
+    html_content = """
+    <html>
+        <head>
+            <title>Twilio Media Stream Server</title>
+        </head>
+        <body>
+            <h1>Twilio Media Stream Server is running!</h1>
+        </body>
+    </html>
+    """
+    return HTMLResponse(content=html_content)
     return {"message": "Twilio Media Stream Server is running!"}
 
 @app.api_route("/incoming-call", methods=["GET", "POST"])
@@ -42,7 +52,7 @@ async def handle_incoming_call(request: Request):
     """Handle incoming call and return TwiML response to connect to Media Stream."""
     response = VoiceResponse()
     # <Say> punctuation to improve text-to-speech flow
-    response.say("Please wait while we connect your call to the A. I. voice assistant, powered by Twilio and the Open-A.I. Realtime API")
+    response.say("Please wait while we connect your call to the Personal Assistant, Neggin.")
     response.pause(length=1)
     response.say("O.K. you can start talking!")
     host = request.url.hostname
